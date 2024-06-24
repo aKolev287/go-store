@@ -12,10 +12,7 @@ type Product struct {
 	Price       uint
 	Reviwes     int
 	Description string
-}
-
-func Migrate() {
-	db.DB.AutoMigrate(&Product{})
+	UserID      uint
 }
 
 func Save(p *Product) {

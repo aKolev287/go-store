@@ -11,6 +11,8 @@ import (
 
 var product models.Product
 
+
+
 func createProduct(ctx *gin.Context) {
 
 	err := ctx.ShouldBindBodyWithJSON(&product)

@@ -21,6 +21,7 @@ func main() {
 	
 	keys := os.Getenv("DB_CREDENTIALS")
 	db.InitDB(keys)
+	routes.Migrate()
 
 	s := gin.Default()
 	routes.ServerRouter(s)
