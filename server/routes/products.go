@@ -3,6 +3,7 @@ package routes
 import (
 	"go-store-server/db"
 	"go-store-server/models"
+
 	"net/http"
 	"strconv"
 
@@ -11,20 +12,23 @@ import (
 
 var product models.Product
 
-
-
 func createProduct(ctx *gin.Context) {
 
-	err := ctx.ShouldBindBodyWithJSON(&product)
+	err := ctx.ShouldBindJSON(&product)
 
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Could not parse request data."})
 		return
 	}
 
+	userID := ctx.GetUint("userID")
+	product.UserID = userID
+
+	product.ID = 0
+
 	models.Save(&product)
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Event created!", "product": product})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Product created!", "product": product})
 }
 
 func readProduct(ctx *gin.Context) {
@@ -60,8 +64,18 @@ func readAllProducts(ctx *gin.Context) {
 
 func updateProduct(ctx *gin.Context) {
 	productId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid product ID"})
+		return
+	}
+
+	models.Read(&product, uint(productId))
+
+	userID := ctx.GetUint("userID")
+
+	if product.UserID != userID {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized."})
 		return
 	}
 
@@ -94,6 +108,15 @@ func deleteProduct(ctx *gin.Context) {
 	productId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid product ID"})
+		return
+	}
+
+	models.Read(&product, uint(productId))
+
+	userID := ctx.GetUint("userID")
+
+	if product.UserID != userID {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"message": "Not authorized."})
 		return
 	}
 

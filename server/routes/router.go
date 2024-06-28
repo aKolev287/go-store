@@ -2,6 +2,7 @@ package routes
 
 import (
 	"go-store-server/db"
+	"go-store-server/middleware"
 	"go-store-server/models"
 
 	"github.com/gin-gonic/gin"
@@ -13,12 +14,16 @@ func Migrate() {
 }
 
 func ServerRouter(r *gin.Engine) {
-	r.POST("product/", createProduct)
-	r.GET("product/:id/", readProduct)
-	r.GET("products/", readAllProducts)
-	r.PUT("product/:id/", updateProduct)
-	r.DELETE("product/:id/", deleteProduct)
+	
+	r.GET("/product/:id/", readProduct)
+	r.GET("/products/", readAllProducts)
 
-	r.POST("user/signup/", signup)
-	r.POST("user/login/", login)
+	authenticated := r.Group("/")
+	authenticated.Use(middleware.Authenticate)
+	authenticated.POST("/product/", createProduct)
+	authenticated.PUT("/product/:id/", updateProduct)
+	authenticated.DELETE("/product/:id/", deleteProduct)
+
+	r.POST("/user/signup/", signup)
+	r.POST("/user/login/", login)
 }

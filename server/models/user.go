@@ -14,7 +14,7 @@ type User struct {
 	Username string
 	Email    string
 	Password string
-	role     string
+	Role     string
 }
 
 func (u *User) SaveUser() {
