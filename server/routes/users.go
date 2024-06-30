@@ -38,6 +38,8 @@ func login(ctx *gin.Context) {
 
 	token, err := utils.GenerateToken(user.Username, user.ID)
 
+	ctx.SetCookie("token", token, 7200, "/", "localhost", false, true)
+
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to validate credentials"})
 	}

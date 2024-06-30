@@ -42,7 +42,7 @@ func readProduct(ctx *gin.Context) {
 
 	models.Read(&product, uint(productId))
 
-	ctx.JSON(http.StatusOK, gin.H{"Product Details": product})
+	ctx.JSON(http.StatusOK, product)
 }
 
 func readAllProducts(ctx *gin.Context) {

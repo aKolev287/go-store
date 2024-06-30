@@ -5,6 +5,7 @@ import (
 	"go-store-server/middleware"
 	"go-store-server/models"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,6 +16,15 @@ func Migrate() {
 
 func ServerRouter(r *gin.Engine) {
 	
+	// Allow all for debug
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:5173"}
+	config.AllowCredentials = true
+
+
+	r.Use(cors.New(config))
+
+
 	r.GET("/product/:id/", readProduct)
 	r.GET("/products/", readAllProducts)
 
@@ -26,4 +36,13 @@ func ServerRouter(r *gin.Engine) {
 
 	r.POST("/user/signup/", signup)
 	r.POST("/user/login/", login)
+
+	r.GET("/getcookie/", func(ctx *gin.Context) {
+		cookie, err := ctx.Request.Cookie("token")
+		if err != nil {
+			ctx.JSON(404, gin.H{"error": "Cookie not found"})
+			return
+		}
+		ctx.JSON(200, gin.H{"token": cookie.Value})
+	})
 }

@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"go-store-server/db"
 	"go-store-server/utils"
 
@@ -30,9 +29,6 @@ func (u *User) SaveUser() {
 func (u *User) ValidateUser(email string, password string) error {
 
 	db.DB.Select("ID", "email", "password").Where("email = ?", email).Find(&u)
-
-	fmt.Println(password)
-	fmt.Println(u.Password)
 
 	err := utils.ComparePassword(password, u.Password)
 
