@@ -34,15 +34,9 @@ func ServerRouter(r *gin.Engine) {
 	authenticated.PUT("/product/:id/", updateProduct)
 	authenticated.DELETE("/product/:id/", deleteProduct)
 
+	r.GET("/user/", fetchUser)
+
 	r.POST("/user/signup/", signup)
 	r.POST("/user/login/", login)
 
-	r.GET("/getcookie/", func(ctx *gin.Context) {
-		cookie, err := ctx.Request.Cookie("token")
-		if err != nil {
-			ctx.JSON(404, gin.H{"error": "Cookie not found"})
-			return
-		}
-		ctx.JSON(200, gin.H{"token": cookie.Value})
-	})
 }

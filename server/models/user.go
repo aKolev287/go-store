@@ -22,7 +22,7 @@ func (u *User) SaveUser() {
 	if err != nil {
 		return
 	}
-
+	
 	db.DB.Create(&u)
 }
 
@@ -37,4 +37,9 @@ func (u *User) ValidateUser(email string, password string) error {
 	}
 
 	return nil
+}
+
+
+func (u *User) ReadUser(ID uint) {
+	db.DB.Where("ID = ?", ID).Find(&u)
 }

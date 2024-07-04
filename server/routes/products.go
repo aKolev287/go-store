@@ -10,10 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var product models.Product
+
 
 func createProduct(ctx *gin.Context) {
-
+	var product models.Product
 	err := ctx.ShouldBindJSON(&product)
 
 	if err != nil {
@@ -32,7 +32,7 @@ func createProduct(ctx *gin.Context) {
 }
 
 func readProduct(ctx *gin.Context) {
-
+	var product models.Product
 	productId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 
 	if err != nil {
@@ -63,6 +63,7 @@ func readAllProducts(ctx *gin.Context) {
 }
 
 func updateProduct(ctx *gin.Context) {
+	var product models.Product
 	productId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 
 	if err != nil {
@@ -105,6 +106,7 @@ func updateProduct(ctx *gin.Context) {
 }
 
 func deleteProduct(ctx *gin.Context) {
+	var product models.Product
 	productId, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid product ID"})
